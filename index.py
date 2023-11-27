@@ -53,7 +53,7 @@ def get_news(person_name):
         print(f"Error: {e}")
 
 # Get user input for the person's name
-person_name = input("Enter the person's name: ")
+person_name = input("Enter the person's name:  ")
 
 # Call the function with the provided name
 get_news(person_name)
