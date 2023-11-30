@@ -83,13 +83,3 @@ def get_news(person_name):
 
     except Exception as e:
         print(f"Error: {e}")
-
-# Get user input for the person's name
-person_name = input("Enter the person's name:  ")
-
-# Call the function with the provided name
-news_articles = get_news(person_name)
-
-# Add a condition to handle empty results
-if not news_articles:
-    print(f"No articles found for {person_name}")

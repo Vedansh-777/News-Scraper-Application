@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Scraper</title>    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: PP mori;
+            color: #fff;
+        }
+
+        .main h1{
+            font-size:10vw;
+            margin-top: 12vw;
+ 
+        }
+        .main h2{
+            font-size:10vw;
+            margin-left:5vw;  
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: black;
+            color: #333;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+     
+        }
+
+        form {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        #lab {
+            font-size: 2vw;
+            margin-top: 10vw;
+            margin-left: 1vw;
+            margin-bottom: 5px;
+            display: block;
+            text-align: left;
+        }
+
+        input {
+            padding: 6px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            margin-left: 1vw;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-left:1vw;
+            min-height:1vh;
+        }
+
+        button:hover {
+            background-color: #007bff;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 5px 0;
+        }
+
+        #data{
+            margin-top:5vw;
+        }
+
+        hr {
+            border: 0.5px solid #ddd;
+            margin: 15px 0;
+            width: 100%;
+        }
+        #name{
+            color:black;
+        }
+
+        button:hover {
+            background-color: #007bff;
+        }
+        
+        .news-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .news-box {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            width: calc(33.33% - 20px); /* Adjust the width as needed */
+            box-sizing: border-box;
+        }
+        
+        .news-box h2 {
+            color: black;
+            margin-bottom: 10px;
+        }
+        
+        .news-box p {
+            color: #007bff;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 5px 0;
+        }
+        
+        .news-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        #person {
+            font-family: PP mori; 
+            color:#007bff;
+            font-size: 36px;
+            text-align: center;  
+            transform: translateY(20px); 
+            transition: opacity 0.5s, transform 0.5s; 
+            display: flex;
+        }
+
+        #head{
+            font-size:4vw;
+            text-align:left;
+            display: flex;
+            align-items: center;
+        }
+      
+    </style>
+</head>
+<body data-scroll-container>
+    <div class="main">
+    <h1 class="main">News</h1>
+    <h2 class="main">Scraper</h2>
+    </div>
+
+    <form method="post" action="{% url 'news_view' %}">
+        {% csrf_token %}
+        <label for="person_name" id="lab">Enter the person's name: </label>
+        <input id="name" type="text" name="person_name" required >
+        <button id="but" type="submit">Fetch News</button>
+       
+    </form>
+
+    <br><br><br><br><br>
+    {% if person_name %}
+    <div>
+    <h2 id="head">News for: {{ person_name }}</h2>
+    </div>
+    {% endif %}
+    <br><br><br>
+    {% if news_articles %}
+    <div class="news-list">
+        {% for article in news_articles %}
+            <div class="news-box">
+                <h2>{{ article.title }}</h2>
+                <p>{{ article.summary }}</p>
+                <p>Published: {{ article.days_ago }} days ago</p>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No news articles found for the specified person.</p>
+{% endif %}
+
+<script>
+    // Add an event listener for scroll events
+scroll.on('scroll', (instance) => {
+    const personElement = document.getElementById('person');
+
+    // Check if the 'person' element is in the viewport
+    if (isElementInViewport(personElement)) {
+        personElement.classList.add('visible'); // Add 'visible' class for the fade-in effect
+    }
+});
+
+// Function to check if an element is in the viewport
+function isElementInViewport(el) {
+    const rect = el.getBoundingClientRect();
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+</script>
+        
+</body>
+</html>
