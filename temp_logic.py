@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
-import re
+import re 
 
 def extract_summary(article):
     # Try to find summary directly within the article
