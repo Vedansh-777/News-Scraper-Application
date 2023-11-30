@@ -1,6 +1,19 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
+import re
+
+def extract_summary(article):
+    # Try to find summary directly within the article
+    summary_element = article.find('div')
+    summary = summary_element.get_text(strip=True) if summary_element else "No Summary"
+    
+    # Break summary at the word 'More' and extract only the part before it
+    summary_parts = re.split(r'\bMore\b', summary, flags=re.IGNORECASE)
+    site_name = summary_parts[0].strip()
+    print(site_name)
+
+    return site_name
 
 def get_news(person_name):
     # Function to fetch and display news related to a person from Google News
@@ -18,7 +31,7 @@ def get_news(person_name):
             soup = BeautifulSoup(response.text, 'html.parser')
 
             # Find news articles
-            articles = soup.find_all('div', {'class': 'xrnccd'})
+            articles = soup.find_all('article')
 
             # Get today's date
             today = datetime.now().date()
@@ -28,14 +41,14 @@ def get_news(person_name):
 
             # Extract and store details of news articles
             for article in articles:
-                # Extract article title
-                title_element = article.find('h3', {'class': 'ipQwMb'})
-                title = title_element.get_text() if title_element else "No Title"
+                # Extract article title (trying different tags)
+                title_element = article.find(['h3', 'h4', 'h5', 'h6'])
+                title = title_element.get_text(strip=True) if title_element else "No Title"
 
                 # Extract article summary
-                summary_parent = article.find('div')
-                summary_element = summary_parent.find('div', recursive=False) if summary_parent else None
-                summary = summary_element.get_text(strip=True) if summary_element else "No Summary"
+                summary_element = article.find('div',{'class':'vr1PYe'})
+                summary = summary_element.get_text() if title_element else "No Title"
+
 
                 # Extract article date
                 date_str = article.find('time')['datetime']
@@ -62,6 +75,9 @@ def get_news(person_name):
                 print(f"Summary: {article['summary']}")
                 print(f"Published {article['days_ago']} days ago\n")
 
+            # Return the list of news articles
+            return news_articles
+
         else:
             print(f"Error: Unable to fetch news. Status Code: {response.status_code}")
 
@@ -72,4 +88,8 @@ def get_news(person_name):
 person_name = input("Enter the person's name:  ")
 
 # Call the function with the provided name
-get_news(person_name)
+news_articles = get_news(person_name)
+
+# Add a condition to handle empty results
+if not news_articles:
+    print(f"No articles found for {person_name}")
