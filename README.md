@@ -27,7 +27,7 @@ The News Scraper is a web application designed to fetch and display news article
 1. Clone the Repository to your local machine:
 
     ```shell
-    git clone https://github.com/your_username/news_scraper.git
+    git clone https://github.com/Vedansh-777/News-Scraper-Application.git
     ```
 
 2. Navigate to the project directory:
